@@ -1,0 +1,144 @@
+<!-- templates/movies/movie_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies</title>
+    <style>
+        /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Container for movie posters */
+        ul {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);  /* Show 5 posters per row */
+            gap: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        li:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: 150px;
+            margin: 10px auto;
+        }
+
+        p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* Add hover effect on image */
+        li:hover img {
+            opacity: 0.8;
+        }
+
+        /* Style for rating */
+        .rating {
+            margin-top: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        /* Responsive design: Adjust grid for smaller screens */
+        @media (max-width: 1200px) {
+            ul {
+                grid-template-columns: repeat(4, 1fr);  /* 4 per row for medium screens */
+            }
+        }
+
+        @media (max-width: 900px) {
+            ul {
+                grid-template-columns: repeat(3, 1fr);  /* 3 per row for smaller screens */
+            }
+        }
+
+        @media (max-width: 600px) {
+            ul {
+                grid-template-columns: repeat(2, 1fr);  /* 2 per row for mobile screens */
+            }
+        }
+
+        @media (max-width: 400px) {
+            ul {
+                grid-template-columns: 1fr;  /* 1 per row for very small screens */
+            }
+        }
+
+        /* Go Back Link Style */
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1rem;
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Movies</h1>
+    <ul>
+        {% for movie in movies %}
+            <li>
+                <h2 title="{{ movie.title }}">{{ movie.title|truncatewords:3 }}</h2>  <!-- Truncate the title -->
+                <p class="rating">Rating: {{ movie.imdb_rating }}</p>
+                {% if movie.poster %}
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                    </a>
+                {% else %}
+                    <p>No poster available.</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'home' %}">Go Back to Home</a>
+</body>
+</html>

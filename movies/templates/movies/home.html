@@ -1,0 +1,226 @@
+<!-- templates/movies/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Movie Database</title>
+    <style>
+        /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            padding: 20px;
+            text-align: center;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease-out forwards; /* Set forwards to keep final state */
+            opacity: 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            animation: slideInFromLeft 1s ease-out, colorChange 4s infinite alternate;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            animation: fadeIn 2s ease-out 0.5s forwards; /* Adjusted delay */
+            opacity: 0;
+        }
+
+        /* Random movie slider */
+        .movie-slider {
+            display: flex;
+            overflow-x: auto;
+            gap: 30px;
+            padding: 20px;
+            scroll-snap-type: x mandatory;
+            justify-content: center;
+            margin-top: 50px;
+            scroll-behavior: smooth;
+        }
+
+        .movie-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .movie-card {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 250px;
+            text-align: center;
+            flex-shrink: 0;
+            scroll-snap-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: popIn 0.8s ease-out;
+            opacity: 0;
+            animation-delay: 0.5s; /* Stagger delay */
+        }
+
+        .movie-card:hover {
+            transform: translateY(-15px) scale(1.05) rotate(2deg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-bottom: 4px solid #ecf0f1;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-top: 15px;
+            color: #2c3e50;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: 180px;
+            margin: 10px auto;
+            opacity: 0;
+            animation: slideInText 0.5s ease-out 0.5s forwards;
+        }
+
+        .rating {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #f39c12;
+            opacity: 0;
+            animation: fadeInText 1s ease-out 0.8s forwards;
+        }
+
+        /* See All Link */
+        .see-all {
+            display: inline-block;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 1.3rem;
+            color: #fff;
+            background-color: #3498db;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            animation: bounceIn 1s ease-out 1s forwards;
+            opacity: 0;
+        }
+
+        .see-all:hover {
+            background-color: #2980b9;
+        }
+
+        /* Links to Movie and TV Show lists */
+        .links {
+            margin-top: 20px;
+        }
+
+        .links a {
+            font-size: 1.2rem;
+            color: #3498db;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            transition: background-color 0.3s ease;
+            margin: 0 20px;
+            animation: fadeIn 1.5s ease-out 1s forwards;
+            opacity: 0;
+        }
+
+        .links a:hover {
+            background-color: #ecf0f1;
+            color: #2980b9;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes slideInFromLeft {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInFromBottom {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9) rotate(10deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes slideInText {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes colorChange {
+            0% { color: #3498db; }
+            50% { color: #9b59b6; }
+            100% { color: #3498db; }
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Movie and TV Show Database!</h1>
+    <p>Explore the best movies and TV shows right here.</p>
+
+    <!-- Random movie slider -->
+    <div class="movie-slider">
+        {% for movie in random_movies %}
+            <div class="movie-card">
+                <h2 title="{{ movie.title }}">{{ movie.title|truncatewords:3 }}</h2>
+                <p class="rating">IMDb Rating: {{ movie.imdb_rating }}</p>
+                {% if movie.poster %}
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster">
+                    </a>
+                {% else %}
+                    <p>No poster available.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- See All Link -->
+    <a href="{% url 'movie_list' %}" class="see-all">See All Movies</a>
+
+    <!-- Links to Movie and TV Show lists -->
+    <div class="links">
+        <a href="{% url 'movie_list' %}">View Movies</a>
+        <a href="{% url 'tv_show_list' %}">View TV Shows</a>
+    </div>
+</body>
+</html>
